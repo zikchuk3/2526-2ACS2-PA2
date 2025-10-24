@@ -10,9 +10,13 @@ def add_terms(entered_term):
     flashcards.write(f"\n{entered_term}")
 
 def clear_terms():
-    flashcards = open("flashcards.txt", "w") #write mode
-    flashcards.write("Flashcards:") 
-    print("terms cleared")    
+    print("If there is anything you want to change, do so now.")
+    print("Be warned that if you want to change anything, all flashcards will be erased.")
+    clear_q = input("Would you like to change anything?")
+    while clear_q == "y":
+        flashcards = open("flashcards.txt", "w") #write mode
+        flashcards.write("Flashcards:") 
+        print("terms cleared")  
 
 def show_scores():
     print("shows_scores function called")
@@ -77,18 +81,14 @@ def main():
                 add_q = input("Would you like to add another flashcard? (y)es or (n)o")
             if add_q == "n":
                 print('okay')
+                clear_terms()
                 break
+            if i == 25:
+                clear_terms()
             else:
                 print_error()
                 break
     
-    #clearing terms/ if user wants to change anything
-    print("If there is anything you want to change, do so now.")
-    print("Be warned that if you want to change anything, all flashcards will be erased.")
-    clear_q = input("Would you like to change anything?")
-    while clear_q == "y":
-        clear_terms()
-        break
     #actually showing flashcards now
     user_input = input("Do you want to start studying now?")
     while user_input == "y":
