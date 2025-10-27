@@ -1,16 +1,76 @@
 import random
+import time
 
 flashcards = open("flashcards.txt")
 
-def play_quiz(filename = "flashcards.txt"):
+def pre_made():
+    pt = open("periodic_table.txt")
+    print("Here is your seclection of premade decks: ")
+    print("1. Periodic Table")
+    answer = input("What deck would your like to use? ")
+    if answer == "1":
+        play_quiz(pt)
+
+#add term to file
+def add_terms(entered_file, entered_term): #make a way for user to name own file
+    #print("call file to append to it flashcards")
+    with open("{entered_file}", "a") as flashcards:
+        flashcards.write(f"\n{entered_term}")
+    print("Term added!")
+
+#add flashacrds to deck func
+def add_flashcards():
+    #naming the file/deck
+    valid_files = ["csv", "txt"]
+    file_input = input("What would you like to name this deck?: ")
+    type_input = input("What kind of file would you like it to be?")
+    while type_input not in valid_files:
+        print("Error! File must be a csv or txt file.")
+        type_input = input("What kind of file would you like it to be?")
+    user_file = file_input+"."+type_input
+    print("Great!")
+
+    #entering the terms
+    print("Enter the terms you want to study one at a time. Seperate sides of the flashcards with a comma inbetween.")
+    print("Here is an example:")
+    print(" H, Hydrogen ----- or ----- Opulent, ostentatiously rich and luxurious or lavish.")
+    print("If there is an error, I'll let you know!")
+    print("You will only be able to enter a max of 25 terms.")
+
+    # adding stuff
+    for i in range(25):
+        term = input("Enter both sides of the flashcard: ").lower()
+        while "," not in term:
+            print("Make sure you have the right format! Remember, a comma has to be inbetween the sides of the flashcard.")
+            term = input("Enter both sides of the flashcard: ").lower()
+        add_terms(user_file, term)
+
+        if i < 24:
+            add_q = input("Would you like to add another flashcard? (y)es or (n)o: ").lower()
+            if add_q == "n":
+                break
+
+#clear terms func
+# need to change this to match with rest
+def clear_terms(entered_file):
+    clear_input = input("Which of your decks would you like to clear?")
+    clear_q = input("Are you sure you want to clear all terms? (y)es or (n)o: ").lower()
+    if clear_q == "y":
+        with open("flashcards.txt", "w") as flashcards: #write mode
+            flashcards.write("Flashcards:") 
+        print("terms cleared")    
+    elif clear_q == "n":
+        print("okay")
+        print("going back...")
+
+def play_quiz(filename):
     print(f"play_quiz function called with {filename}")
     # "r" opens in readmode
-    # with helps regulate files ?
+    # 'with' helps regulate files 
     with open(filename, "r") as f:
         # strip removes spaces at the beginning and end of the string/line
-        # reads the line only if "," is in it
-        lines = [line.strip() for line in f.readlines() if "," in line]
-    # create a tuple out of the line in the file and indicate that its split by comma
+        lines = [line.strip() for line in f.readlines() if "," in line] # reads the line only if "," is in it
+    #creates a tuple out of the line in the file and indicate that its split by comma so that that can be used as two sides of a flashcard
     cards = [tuple(line.split(",", 1)) for line in lines]
 
     print("Starting your flashcards.....")
@@ -27,55 +87,17 @@ def play_quiz(filename = "flashcards.txt"):
     # to save the score to add_scores
     add_scores(score, len(cards))
 
-#add term to file
-def add_terms(entered_term):
-    print("call file to append to it flashcards")
-    with open("flashcards.txt", "a") as flashcards:
-        flashcards.write(f"\n{entered_term}")
-    print("Term added!")
-
-#clear terms func
-def clear_terms():
-    clear_q = input("Are you sure you want to clear all terms? (y)es or (n)o: ").lower()
-    if clear_q == "y":
-        with open("flashcards.txt", "w") as flashcards: #write mode
-            flashcards.write("Flashcards:") 
-        print("terms cleared")    
-    elif clear_q == "n":
-        print("okay")
-        print("going back...")
-
-#add flashacrds to deck func
-def add_flashcards():
-    print("Enter the terms you want to study one at a time. Seperate sides of the flashcards with a comma inbetween.")
-    print("Here is an example:")
-    print(" H, Hydrogen ----- or ----- Opulent, ostentatiously rich and luxurious or lavish.")
-    print("If there is an error, I'll let you know!")
-    print("You will only be able to enter a max of 25 terms.")
-
-    # adding stuff
-    for i in range(25):
-        term = input("Enter both sides of the flashcard: ").lower()
-        while "," not in term:
-            print("Make sure you have the right format! Remember, a comma has to be inbetween the sides of the flashcard.")
-            term = input("Enter both sides of the flashcard: ").lower()
-        add_terms(term)
-
-        if i < 24:
-            add_q = input("Would you like to add another flashcard? (y)es or (n)o: ").lower()
-            if add_q == "n":
-                break
-
 #to add score to score file
 def add_scores(correct, total):
-    print("add_scores function called to append new score to score file")
+    #print("add_scores function called to append new score to score file")
+    username = input("What is your username so your score can be saved? ")
     with open("scores.txt", "a") as scores:
-        scores.write(f"{correct}/{total}\n")
-    print(f"Score added: {correct}/{total}")   
+        scores.write(f"{username}'s Score: {correct}/{total}\n") 
 
 def show_scores():
-    print("shows_scores function called")
+    #print("shows_scores function called")
     print("Here is your score History:")
+    # finally able to use try/except yayyyyy!
     try:
         with open("scores.txt", "r") as scores:
             lines = scores.readlines()
@@ -123,31 +145,38 @@ def restart(choices = ["yes", "no"]):
         print("        ꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷")'''
 
 def main():
+    #intro
+    print("Welcome to Flashstudy!")
+    # so that when it ges out of the helper functions it automatically goes back to this
     while True:
-        #intro
-        print("Welcome to Flashstudy!")
         print(" ----- MENU -----")
-        print("1. Add flashcards")
-        print("2. Start quiz")
-        print("3. Show scores")
-        print("4. Clear flashcards")
-        print("5. Exit")
+        print("1. Use pre-made decks")
+        print("2. Make your own deck(s)")
+        print("3. Start quiz")
+        print("4. Show scores")
+        print("5. Clear your deck(s)")
+        print("6. Exit")
 
-        choice = input("Choose and option from 1-5: ").strip()
+        end_choice = ["6"]
 
-        if choice == "1":
-            add_flashcards()
-        elif choice == "2":
-            play_quiz()
-        elif choice == "3":
-            show_scores()
-        elif choice == "4":
-            print("Be warned that if you want to change anything, all flashcards will be erased.")
-            clear_terms()
-        elif choice == "5":
-            print("Goodbye!")
-            break
-        else:
-            print_error()
+        choice = input("Choose and option from 1-6: ").strip()
+
+        while choice not in end_choice:
+            #for menu
+            if choice == "1":
+                pre_made()
+            elif choice == "2":
+                add_flashcards()
+            elif choice == "3":
+                play_quiz()
+            elif choice == "4":
+                show_scores()
+            elif choice == "5":
+                print("Be warned that if you want to change anything, all flashcards will be erased.")
+                clear_terms()
+            else:
+                print_error()
+
+        print("Goodbye!")
 main()
 
