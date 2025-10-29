@@ -1,3 +1,39 @@
+'''
+Author: Zikora C
+Program Title: Flashstudy
+Program desc: A flashcard program to study flashcards. You can study from a pre-made deck, make your own deck and study from it,
+            save your score, show the score history, and clear your premade deck.
+
+:::::Reflection:::::
+problems I faced:
+- I used while true in the main function when I wasn't supposed to and had to figure out a way to print the meny again while in the
+'while choice not it end_choice' part. (I just made the menu a helper function and called it)
+- I edited the starter code a lot and I wasn't supposed to do that (I'm pretty sure) and I couldn't really revert it back so I guess that was a problem
+
+what I'm most proud of:
+- I am most proud of the custom flashcards part because it's nice that the user can add their own things
+- I am also proud of how the program runs smoothly and is organized nicely 
+    - I had time to stylize it/insert time so it flowed nicely
+- I finally found an instance to use try/except
+- Like before, I am proud that I struggled a lot less than in CS1 when I was just learning python
+
+what I would add/change:
+- I would make a way for the user to be able to stop studying the flashcards at a certain point because it just
+keeps going until the deck ends
+- instead of the clear_terms func clearing all the flashcards I would make it clear a certain terms the user says they want to clear
+
+Pledge: I did not give nor receive external help on this assignment,
+with the exception of the following sources:
+w3resource for files - https://www.w3resource.com/python-exercises/file/
+strip() - https://www.w3schools.com/python/ref_string_strip.asp
+split() - https://www.w3schools.com/python/ref_string_split.asp
+opening file in read mode - https://www.geeksforgeeks.org/python/reading-writing-text-files-python/
+with statement - https://www.geeksforgeeks.org/python/with-statement-in-python/
+tuple() constructor - https://www.geeksforgeeks.org/python/tuple-constructor-in-python/
+the hover thingy on vscode 
+google- https://www.google.com
+'''
+
 import random
 import time
 
@@ -88,7 +124,6 @@ def add_flashcards():
                 add_q = input("Would you like to add another flashcard? (y)es or (n)o: ").lower()
             if add_q == "n":
                 break
-
 
 #to save custom decks by all users in one place so they don't have to rewrite them
 # to also play the deck after creating it
@@ -204,10 +239,10 @@ def play_quiz(filename):
     print(f"\nYour number of correct flashcards: {score}/{len(cards)}")
 
     # to save the score to add_scores
-    add_scores(score, len(cards))
+    add_scores(score, len(cards), filename)
 
 #to add score to score file
-def add_scores(correct, total):
+def add_scores(correct, total, chosen_file):
     #print("add_scores function called to append new score to score file")
     print()
     time.sleep(0.3)
@@ -219,7 +254,7 @@ def add_scores(correct, total):
     time.sleep(0.5)
     print("Date saved...")
     with open("scores.txt", "a") as scores:
-        scores.write(f"{username}'s Score: {correct}/{total} on {date}\n") 
+        scores.write(f"{username}'s Score: {correct}/{total} on {chosen_file} - {date}\n") 
 
 #show scores in score file
 def show_scores():
@@ -236,7 +271,7 @@ def show_scores():
                 print("No scores recorded yet!")
             else:
                 for line in lines:
-                    print(" -", line.strip())
+                    print(" >", line.strip())
     except FileNotFoundError:
         time.sleep(1)
         print("No score file found yet. Take a quiz to create one!")
@@ -255,13 +290,14 @@ def menu():
     print("1. Study from pre-made decks")
     print("2. Make your own deck(s)")
     print("3. Study from custom deck(s)")
-    print("4. Show scores")
+    print("4. Show score history")
     print("5. Clear your deck(s)")
     print("6. Exit")
 
-
 #main func
 def main():
+    print()
+    time.sleep(0.3)
     #intro
     print("------------ Welcome to Flashstudy! ------------")
     print()
@@ -307,6 +343,5 @@ def main():
     print(" \_ V _/  /\   /\\\\  \'")
     print("   \  \__/\   /\ @_/  /")
     print("    \____\____\______/")
-
 main()
 
