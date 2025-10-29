@@ -21,6 +21,7 @@ what I would add/change:
 - I would make a way for the user to be able to stop studying the flashcards at a certain point because it just
 keeps going until the deck ends
 - instead of the clear_terms func clearing all the flashcards I would make it clear a certain terms the user says they want to clear
+- I would also like to delete the deck that was cleared from the decks file if the user clears its terms
 
 Pledge: I did not give nor receive external help on this assignment,
 with the exception of the following sources:
@@ -57,10 +58,10 @@ def add_terms(entered_file, entered_term): #made a way for user to name own file
     print("Flashcard added to deck!")
     time.sleep(0.5)
     print("-----------------------------------------------")
-    print(f"               {entered_term}")
+    print(f"{entered_term}")
     print("-----------------------------------------------")
 
-y_or_n = ["y", "n"]
+y_or_n = ["y", "n", "yes", "no"]
 #create own deck
 def add_flashcards():
     #naming the file/deck
@@ -145,6 +146,7 @@ def custom_decks():
     print()
     time.sleep(0.5)
     print("---- CUSTOM DECKS ---- ")
+    print("(some of these decks may be empty)")
     #enumerate to get the index of which deck it is
     for i, deck in enumerate(decks, 1):
         print(f"{i}. {deck}")
@@ -194,13 +196,14 @@ def clear_terms():
         chosen_deck = decks[clear_input - 1]
         time.sleep(0.3)
         clear_q = input("Are you sure you want to clear all terms? (y)es or (n)o: ").lower()
-        if clear_q == "y":
+        if clear_q == "y" or clear_q == "yes":
             print()
             print(f"Okay! Clearing flashcards from {chosen_deck}...")
             time.sleep(1)
-            chosen_deck.write("") #writing blank in the deck
+            with open(chosen_deck, "w") as f: #clearing deck
+                f.write("Cleared Deck.")
             print(f"Flashcards from {chosen_deck} cleared!")
-        elif clear_q == "n":
+        elif clear_q == "n" or clear_q == "no":
             print()
             time.sleep(0.2)
             print("Okay")
@@ -222,6 +225,7 @@ def play_quiz(filename):
 
     print()
     time.sleep(0.5)
+    print("Please type 'exit' if you want to end the flashcards. If you don't know the answer, just press enter.")
     print("Starting your flashcards.....")
     score = 0
     for front, back in random.sample(cards, len(cards)):
@@ -231,6 +235,8 @@ def play_quiz(filename):
         if answer == back.strip().lower():
             print("Correct!")
             score += 1
+        elif answer == "exit":
+            break
         else:
             print(f" Incorrect. The answer was '{back.strip()}'.")
 
