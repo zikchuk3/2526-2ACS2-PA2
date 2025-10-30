@@ -49,6 +49,9 @@ def pre_made():
     answer = input("What deck would your like to use? ")
     if answer == "1":
         play_quiz("periodic_table.txt")
+    else:
+        print("That does not exist.")
+        pre_made()
 
 #add term to custom flashcards
 def add_terms(entered_file, entered_term): #made a way for user to name own file (added enterd_file)
